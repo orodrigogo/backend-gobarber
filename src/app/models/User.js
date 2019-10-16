@@ -30,7 +30,7 @@ class User extends Model {
 
   static associate(models) {
     // Relacionamento pertece há (este modulo de usuario pertece a um file).
-    this.belongsTo(models.File, { foreignKey: 'avatar_id' });
+    this.belongsTo(models.File, { foreignKey: 'avatar_id', as: 'avatar' }); // as é codigonome ou alias.
   }
 
   checkPassword(password) {
