@@ -28,6 +28,11 @@ class User extends Model {
     return this;
   }
 
+  static associate(models) {
+    // Relacionamento pertece há (este modulo de usuario pertece a um file).
+    this.belongsTo(models.File, { foreignKey: 'avatar_id' });
+  }
+
   checkPassword(password) {
     return bcrypt.compare(password, this.password_hash);
   }
