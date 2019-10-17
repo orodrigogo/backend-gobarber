@@ -9,7 +9,7 @@ class File extends Model {
         url: {
           type: Sequelize.VIRTUAL,
           get() {
-            return `http://localhost:3333/files/${this.path}`; // Get para manipular o valor antes de exibir.
+            return `${process.env.APP_URL}/files/${this.path}`; // Get para manipular o valor antes de exibir.
           },
         }, // campo virtual: não existe na tabela, somente aqui em memoria.
       },
