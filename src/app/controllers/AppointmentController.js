@@ -17,7 +17,7 @@ class AppointmentController {
     const appointment = await Appointment.findAll({
       where: { user_id: req.userId, canceled_at: null },
       order: ['date'],
-      attributes: ['id', 'date'],
+      attributes: ['id', 'date', 'past', 'cancelable'],
       limit: 20, // Limite para listar no máximo 20 registros para fazer a páginação.
       offset: (page - 1) * 20, // Quantos registros eu quero pular: pula 20 registros e mostra os próximos 20.
       // Fazendo o relacionamento.
