@@ -3,6 +3,7 @@ import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import * as Sentry from '@sentry/node';
+import cors from 'cors';
 import Youch from 'youch';
 import 'express-async-errors'; // tem que vim antes da importacao das rotas, para que as rotas tenham o asyn error integrado.
 import routes from './routes';
@@ -25,6 +26,8 @@ class App {
     // The request handler must be the first middleware on the app
     this.server.use(Sentry.Handlers.requestHandler());
 
+    // Para permitir que outras aplicações utilizem a API.
+    this.server.use(cors());
     this.server.use(express.json());
 
     // Esse recurso do express (o static) permite abrir arquivos/imagens no navegador.
