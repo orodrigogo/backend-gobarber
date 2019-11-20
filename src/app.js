@@ -2,6 +2,9 @@ import 'dotenv/config';
 
 import express from 'express';
 import helmet from 'helmet';
+import redis from 'redis';
+import RateLimit from 'express-rate-limit';
+import RateLimitRedis from 'rate-limit-redis';
 import path from 'path';
 import * as Sentry from '@sentry/node';
 import cors from 'cors';
@@ -36,6 +39,19 @@ class App {
     this.server.use(
       '/files',
       express.static(path.resolve(__dirname, '..', 'tmp', 'uploads'))
+    );
+
+    this.server.use(
+      new RateLimit({
+        store: new RateLimitRedis({
+          client: redis.createClient({
+            host: process.env.REDIS_HOST,
+            port: process.env.REDIS_PORT,
+          }),
+        }),
+        windowMs: 1000 * 60 * 15,
+        max: 10,
+      })
     );
   }
 
