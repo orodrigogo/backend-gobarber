@@ -1,6 +1,7 @@
 import 'dotenv/config';
 
 import express from 'express';
+import helmet from 'helmet';
 import path from 'path';
 import * as Sentry from '@sentry/node';
 import cors from 'cors';
@@ -27,6 +28,7 @@ class App {
     this.server.use(Sentry.Handlers.requestHandler());
 
     // Para permitir que outras aplicações utilizem a API.
+    this.server.use(helmet());
     this.server.use(cors());
     this.server.use(express.json());
 
