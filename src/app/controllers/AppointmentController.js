@@ -5,10 +5,21 @@ import File from '../models/File';
 import CreateAppointmentService from '../services/CreateAppointmentService';
 import CancelAppointmentServices from '../services/CancelAppointmentServices';
 
+import Cache from '../../lib/Cache';
+
 class AppointmentController {
   async index(req, res) {
     // Passando o valor padrão 1. Caso nenhum número de paginação seja criado.
     const { page = 1 } = req.query;
+
+    const cacheKey = `user:${req.userId}:appointment:${page}`;
+
+    const cached = await Cache.get(cacheKey);
+
+    // Verificando se os aganemtos já estão armazenados no cache.
+    if (cached) {
+      return res.json(cached);
+    }
 
     const appointment = await Appointment.findAll({
       where: { user_id: req.userId, canceled_at: null },
@@ -49,10 +60,14 @@ class AppointmentController {
   }
 
   async delete(req, res) {
+    const cacheKey = `user:${req.user_id}:appointment`;
+
     const appointment = await CancelAppointmentServices.run({
       provider_id: req.params.id,
       user_id: req.userId,
     });
+
+    await Cache.set(cacheKey, appointment);
 
     return res.json(appointment);
   }
